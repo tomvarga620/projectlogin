@@ -75,7 +75,17 @@ border:1px green solid;
 
 }
 
-#main {
+#boxMain {
+
+width:100%;
+height:250px;
+background: blue;
+display:flex;
+justify-content: flex-center;
+
+}
+
+#boxJokes {
 
 overflow-y:auto; 
 overflow-x:hidden; 
@@ -86,11 +96,9 @@ background:red;
 
 }
 
-.joke {
+#jokeButton {
 
-width:100%;
-height:20px;
-background: blue;
+margin:auto;
 
 }
 
@@ -99,31 +107,44 @@ background: blue;
 width:100px;
 height:100px;
 background:green;
+display:none; 
 
 }
 
-.logoutBtn {
+.joke {
 
-background:blue;
+width:100%;
+height:70px;
+background:green;
+margin-top:10px;
+font-size:25px;
+text-align:center;
+line-height: 70px;
 
 }
 
 </style>
 
 <div id="boxUp">
-	
+	<div id='logoutBox'><input type='button' value='logout' class='logoutBtn' onclick='logout()'></div>
 </div>
+
+<div id="boxMain">
 
 <form>
 	<label>Username</label>
-	<input type="text" name="username">
+	<input type="text" name="username" id="field1">
 	<label>Password</label>
-	<input type="password" name="pass">
+	<input type="password" name="pass" id="field2">
 	<input type="button" name="submit" value="Login" onclick="getData()">
 </form>
 
+<!--<input type="button" id="jokeButton" value="Get joke">-->
+</div>
 
-<div id="main">
+<div id="boxJokes">
+
+<!--<div class="joke"></div>-->
 
 </div>
 
@@ -131,9 +152,15 @@ background:blue;
 
 function getData(){
 
+/*variables values from form*/
 let nickname=document.getElementsByName("username")[0].value;
 let pass=document.getElementsByName("pass")[0].value;
-let token;
+
+/*
+let clear1=document.getElementById("field1");
+let clear2=document.getElementById("field2");
+clear1.value = '';
+clear2.value = '';*/
 
 xhr = new XMLHttpRequest();
 let url = "http://itsovy.sk:1201/login";
@@ -147,21 +174,77 @@ xhr.onreadystatechange = function () {
         let json = JSON.parse(xhr.responseText);
 
         /*session*/
-       	sessionStorage.setItem('dataStored', json.token);
+        sessionStorage.setItem('loginName', json.login);
+        sessionStorage.setItem('loginToken', json.token);
        	/*variable for session*/
-       	token=sessionStorage.getItem('dataStored');
+       	let token=sessionStorage.getItem('loginToken');
+        let enteredName=sessionStorage.getItem('loginName');
        	console.log(token);
+        console.log(enteredName);
 
-       $('#boxUp').append("<div id='logoutBox'><input type='button' value='logout' class='logoutBtn'></div>");
+        document.getElementsByTagName("form")[0].style.display="none";
+        document.getElementById("logoutBox").style.display="block";
+
+        $( "#boxMain" ).append( "<input type='button' id='jokeButton' value='Get joke' onclick='getJoke()'>" );
+    
     }
 
-    /*if () {
-
-    }*/
 }
 
 let data = JSON.stringify({login:nickname,password:pass});
 xhr.send(data);
+
+}
+
+function getJoke(){
+
+let token=sessionStorage.getItem('loginToken');
+let enteredName=sessionStorage.getItem('loginName');
+console.log(xhr.status);
+console.log(token);
+console.log(enteredName);
+
+xhr = new XMLHttpRequest();
+let url = "http://itsovy.sk:1201/joke";
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json");
+xhr.onreadystatechange = function () { 
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        
+      let joke = xhr.responseText;
+      $( "#boxJokes" ).append( "<div class='joke'>"+joke+"</div>" );
+
+    }
+}
+let data = JSON.stringify({login:enteredName,token:token});
+xhr.send(data);
+
+}
+
+function logout(){
+
+  let token=sessionStorage.getItem('loginToken');
+  let enteredName=sessionStorage.getItem('loginName');
+  console.log(xhr.status);
+  console.log(token);
+  console.log(enteredName);
+
+  xhr = new XMLHttpRequest();
+  let url = "http://itsovy.sk:1201/logout";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json");
+  xhr.onreadystatechange = function () { 
+      if (xhr.readyState == 4 && xhr.status == 200) {
+       
+        document.getElementsByTagName("form")[0].style.display="block";
+        document.getElementById("logoutBox").style.display="none";
+
+        $( "#jokeButton" ).remove();
+
+      }
+  }
+  let data = JSON.stringify({login:enteredName,token:token});
+  xhr.send(data);
 
 }
 

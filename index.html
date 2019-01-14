@@ -8,12 +8,15 @@
 
 <style>
 
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 body {
 
 width:100%;
 height:100%;
 margin:0 auto;
 padding:0;
+font-family:Roboto;
 
 }
 
@@ -59,7 +62,6 @@ input[type="button"]{
 
 width:90px;
 height:60px;
-margin-bottom:20px;
 
 }
 
@@ -79,7 +81,7 @@ border:1px green solid;
 
 width:100%;
 height:250px;
-background: blue;
+background:grey;
 display:flex;
 justify-content: flex-center;
 
@@ -91,14 +93,8 @@ overflow-y:auto;
 overflow-x:hidden; 
 height:400px;
 max-height:500px;
-width:100%;
+width:70%;
 background:red;
-
-}
-
-#jokeButton {
-
-margin:auto;
 
 }
 
@@ -114,12 +110,25 @@ display:none;
 .joke {
 
 width:100%;
-height:70px;
-background:green;
-margin-top:10px;
+height:130px;
+/*background:green;*/
+margin-top:25px;
 font-size:25px;
 text-align:center;
-line-height: 70px;
+/*line-height: 70px;*/
+color:white;
+
+}
+
+#formSendJoke {
+
+display:none;
+
+}
+
+#jokeSend,#jokeGet {
+
+width:324px;
 
 }
 
@@ -131,12 +140,17 @@ line-height: 70px;
 
 <div id="boxMain">
 
-<form>
+<form id="formLogin">
 	<label>Username</label>
 	<input type="text" name="username" id="field1">
 	<label>Password</label>
 	<input type="password" name="pass" id="field2">
 	<input type="button" name="submit" value="Login" onclick="getData()">
+</form>
+
+<form id="formSendJoke">
+	<label class="hdnLabel">Send joke!</label>
+	<input class="hdnField" type="text" name="joke">
 </form>
 
 <!--<input type="button" id="jokeButton" value="Get joke">-->
@@ -145,6 +159,7 @@ line-height: 70px;
 <div id="boxJokes">
 
 <!--<div class="joke"></div>-->
+
 
 </div>
 
@@ -182,11 +197,13 @@ xhr.onreadystatechange = function () {
        	console.log(token);
         console.log(enteredName);
 
-        document.getElementsByTagName("form")[0].style.display="none";
+        document.getElementById("formLogin").style.display="none";
         document.getElementById("logoutBox").style.display="block";
+        document.getElementById("formSendJoke").style.display="block";
+ 
+        $( "#formSendJoke" ).append( "<input type='button' id='jokeSend' value='Send joke' onclick='sendJoke()'>" );
+        $( "#formSendJoke" ).append( "<input type='button' id='jokeGet' value='Get joke' onclick='getJoke()'>" );
 
-        $( "#boxMain" ).append( "<input type='button' id='jokeButton' value='Get joke' onclick='getJoke()'>" );
-    
     }
 
 }
@@ -222,6 +239,31 @@ xhr.send(data);
 
 }
 
+function sendJoke(){
+
+let token=sessionStorage.getItem('loginToken');
+let enteredName=sessionStorage.getItem('loginName');
+let jokeEntered= document.getElementsByName("joke")[0].value;
+
+console.log(xhr.status);
+console.log(token);
+console.log(enteredName);
+console.log(jokeEntered);
+
+xhr = new XMLHttpRequest();
+let url = "http://itsovy.sk:1201/addjoke";
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json");
+xhr.onreadystatechange = function () { 
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      let json = JSON.parse(xhr.responseText);
+    }
+}
+let data = JSON.stringify({login:enteredName,token:token,joke:jokeEntered});
+xhr.send(data);
+
+}
+
 function logout(){
 
   let token=sessionStorage.getItem('loginToken');
@@ -237,10 +279,12 @@ function logout(){
   xhr.onreadystatechange = function () { 
       if (xhr.readyState == 4 && xhr.status == 200) {
        
-        document.getElementsByTagName("form")[0].style.display="block";
+        document.getElementById("formLogin").style.display="block";
         document.getElementById("logoutBox").style.display="none";
+        document.getElementById("formSendJoke").style.display="none";
 
-        $( "#jokeButton" ).remove();
+        $( "#jokeSend" ).remove();
+        $( "#jokeGet" ).remove();
 
       }
   }

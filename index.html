@@ -126,7 +126,7 @@ display:none;
 
 }
 
-#jokeSend,#jokeGet {
+#jokeSend,#jokeGet,#passReset {
 
 width:324px;
 
@@ -138,6 +138,20 @@ color:red;
 font-size:20px;
 margin-top:5px;
 text-align:center;
+display:none;
+
+}
+
+#passReset {
+
+text-align:center;
+cursor: pointer;
+margin-top:8px;
+
+}
+
+#formResetPass {
+
 display:none;
 
 }
@@ -159,10 +173,18 @@ display:none;
 	<div id="error403">You have something wrong in request</div>
 	<input type="button" name="submit" value="Login" onclick="getData()">
 </form>
+<form id="formResetPass">
+  <label>Old password</label>
+  <input type="password" name="oldpass">
+  <label>New password</label>
+  <input type="password" name="newpass">
+  <input type="button" id="changepass" onclick="changePass()" value="Change Password">
+</form>
 
 <form id="formSendJoke">
 	<label class="hdnLabel">Send joke!</label>
 	<input class="hdnField" type="text" name="joke">
+  <input type="button" id="passReset" value="Reset password" onclick="toPass()">
 </form>
 
 </div>
@@ -283,7 +305,6 @@ xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let json = JSON.parse(xhr.responseText);
 
-
     }
 }
 let data = JSON.stringify({login:enteredName,token:token,joke:jokeEntered});
@@ -309,6 +330,7 @@ function logout(){
         document.getElementById("formLogin").style.display="block";
         document.getElementById("logoutBox").style.display="none";
         document.getElementById("formSendJoke").style.display="none";
+        document.getElementById("formResetPass").style.display="none";
        
         $( "#jokeSend" ).remove();
         $( "#jokeGet" ).remove();
@@ -317,6 +339,46 @@ function logout(){
   }
   let data = JSON.stringify({login:enteredName,token:token});
   xhr.send(data);
+
+}
+
+function toPass(){
+
+
+document.getElementById("formSendJoke").style.display="none";
+document.getElementById("formResetPass").style.display="block";
+
+
+}
+
+function changePass(){
+
+let token=sessionStorage.getItem('loginToken');
+let enteredName=sessionStorage.getItem('loginName');
+
+let oldpass = document.getElementsByName("oldpass")[0].value;
+let newpass = document.getElementsByName("newpass")[0].value;
+
+console.log(oldpass+newpass);
+console.log(xhr.status);
+console.log(token);
+console.log(enteredName);
+
+xhr = new XMLHttpRequest();
+let url = "http://itsovy.sk:1201/changepassword";
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json");
+xhr.onreadystatechange = function () { 
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      /*let json = JSON.parse(xhr.responseText);*/
+
+        document.getElementById("formResetPass").style.display="none";
+        document.getElementById("formSendJoke").style.display="block";
+
+    }
+}
+let data = JSON.stringify({login:enteredName,token:token,oldpassword:oldpass,newpassword:newpass});
+xhr.send(data);
 
 }
 

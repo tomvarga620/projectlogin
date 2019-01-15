@@ -112,7 +112,7 @@ display:none;
 width:100%;
 height:130px;
 /*background:green;*/
-margin-top:25px;
+margin-top:20px;
 font-size:25px;
 text-align:center;
 /*line-height: 70px;*/
@@ -132,6 +132,16 @@ width:324px;
 
 }
 
+#error401,#error403 {
+
+color:red;
+font-size:20px;
+margin-top:5px;
+text-align:center;
+display:none;
+
+}
+
 </style>
 
 <div id="boxUp">
@@ -145,6 +155,8 @@ width:324px;
 	<input type="text" name="username" id="field1">
 	<label>Password</label>
 	<input type="password" name="pass" id="field2">
+	<div id="error401">You entered wrong login name or password</div>
+	<div id="error403">You have something wrong in request</div>
 	<input type="button" name="submit" value="Login" onclick="getData()">
 </form>
 
@@ -153,12 +165,9 @@ width:324px;
 	<input class="hdnField" type="text" name="joke">
 </form>
 
-<!--<input type="button" id="jokeButton" value="Get joke">-->
 </div>
 
 <div id="boxJokes">
-
-<!--<div class="joke"></div>-->
 
 
 </div>
@@ -200,10 +209,25 @@ xhr.onreadystatechange = function () {
         document.getElementById("formLogin").style.display="none";
         document.getElementById("logoutBox").style.display="block";
         document.getElementById("formSendJoke").style.display="block";
+        document.getElementById("error401").style.display="none";
+        document.getElementById("error403").style.display="none";
+
+        /*clean fields in form*/
+        document.getElementById("field1").value="";
+        document.getElementById("field2").value="";
  
         $( "#formSendJoke" ).append( "<input type='button' id='jokeSend' value='Send joke' onclick='sendJoke()'>" );
         $( "#formSendJoke" ).append( "<input type='button' id='jokeGet' value='Get joke' onclick='getJoke()'>" );
 
+    }
+
+    if(xhr.status == 401){
+    	document.getElementById("error401").style.display="block";
+    }
+
+
+    if(xhr.status == 403){
+    	document.getElementById("error403").style.display="block";
     }
 
 }
@@ -241,6 +265,7 @@ xhr.send(data);
 
 function sendJoke(){
 
+document.getElementsByClassName("hdnField")[0].value="";
 let token=sessionStorage.getItem('loginToken');
 let enteredName=sessionStorage.getItem('loginName');
 let jokeEntered= document.getElementsByName("joke")[0].value;
@@ -257,6 +282,8 @@ xhr.setRequestHeader("Content-type", "application/json");
 xhr.onreadystatechange = function () { 
     if (xhr.readyState == 4 && xhr.status == 200) {
       let json = JSON.parse(xhr.responseText);
+
+
     }
 }
 let data = JSON.stringify({login:enteredName,token:token,joke:jokeEntered});
@@ -282,7 +309,7 @@ function logout(){
         document.getElementById("formLogin").style.display="block";
         document.getElementById("logoutBox").style.display="none";
         document.getElementById("formSendJoke").style.display="none";
-
+       
         $( "#jokeSend" ).remove();
         $( "#jokeGet" ).remove();
 

@@ -10,7 +10,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
-body {
+body,html {
 
 width:100%;
 height:100%;
@@ -20,16 +20,56 @@ font-family:Roboto;
 
 }
 
+#boxWrapper {
+
+width:100%;
+height:100%;
+margin:0 auto;
+padding:0;
+
+}
+
 #boxUp {
 
 width:100%;
-height:100px;
+height:15%;
 background:#7F4D4F;
 position:relative;
 /*display:flex;
 justify-content: flex-end;*/
 
 }
+
+#boxMain {
+
+width:100%;
+height:35%;
+display:flex;
+justify-content: flex-center;
+background: #E3E2DF;
+
+}
+
+#boxJokes {
+
+width:100%;
+height:50%;
+overflow-y:auto; 
+overflow-x:hidden; 
+background: #F0EFEC;
+
+}
+
+#logoutBox {
+
+width:100px;
+height:100%;
+/*background:green;*/
+display:none; 
+float:right;
+
+}
+
 
 form {
 
@@ -99,38 +139,6 @@ border:1px #401315 solid;
 
 }
 
-#boxMain {
-
-width:100%;
-height:300px;
-display:flex;
-justify-content: flex-center;
-background: #E3E2DF;
-
-}
-
-#boxJokes {
-
-overflow-y:auto; 
-overflow-x:hidden; 
-height:400px;
-max-height:500px;
-width:100%;
-background: #F0EFEC;
-
-}
-
-#logoutBox {
-
-width:100px;
-height:100px;
-/*background:green;*/
-display:none; 
-position:relative;
-float:right;
-
-}
-
 
 .joke {
 
@@ -189,7 +197,7 @@ display:none;
 
 height:80px;
 width:80px;
-position: absolute;
+position: relative;
 top: 50%;
 left: 50%;
 margin: -40px 0 0 -40px;
@@ -204,50 +212,107 @@ font-weight: bold;
 position: absolute;
 top: 50%;
 left: 50%;
-margin: -40px 0 0 -160px;
+margin: -40px 0 0 -150px;
 
 }
 
 
+@media screen and (max-width: 768px) {
+
+#boxUp{
+
+display:block;
+height:20%;
+
+}
+
+#boxMain{
+height:30%;
+}
+
+#boxJokes{
+
+
+}
+
+#logoutBox {
+
+width:100%;
+height:30%;
+float:none;
+margin:auto;
+/*background:blue;*/
+
+}
+
+#logoutBtn {
+
+width:100%;
+height:100%;
+margin:0 auto;
+padding:0;
+left:0;
+right:0;
+border-radius:0px;
+position: initial;
+
+}
+
+span {
+
+font-size:50px;
+color:white;
+font-weight: bold;
+position: absolute;
+top: 50%;
+left: 50%;
+margin: -10px 0 0 -150px;
+
+}
+
+}
+  
+
 </style>
 
-<div id="boxUp">
-  <span>Project Login</span>
-	<div id='logoutBox'><input type='button' value='Logout' id='logoutBtn' onclick='logout()'></div>
+<div id="boxWrapper">
 
-</div>
-
-<div id="boxMain">
-
-<form id="formLogin">
-	<label>Username</label>
-	<input type="text" name="username" id="field1">
-	<label>Password</label>
-	<input type="password" name="pass" id="field2">
-	<div id="error401">You entered wrong login name or password</div>
-	<div id="error403">You have something wrong in request</div>
-	<input type="button" name="submit" value="Login" onclick="getData()">
-</form>
-<form id="formResetPass">
-  <label>Old password</label>
-  <input type="password" name="oldpass">
-  <label>New password</label>
-  <input type="password" name="newpass">
-  <input type="button" id="changepass" onclick="changePass()" value="Change Password">
-</form>
-
-<form id="formSendJoke">
-	<label class="hdnLabel">Send joke!</label>
-	<input class="hdnField" type="text" name="joke">
-  <input type="button" id="passReset" value="Reset password" onclick="toPass()">
-</form>
-
-</div>
-
-  <div id="boxJokes">
-
+  <div id="boxUp">
+    <span>Project Login</span>
+  	<div id='logoutBox'><input type='button' value='Logout' id='logoutBtn' onclick='logout()'></div>
 
   </div>
+
+
+    <div id="boxMain">
+
+    <form id="formLogin">
+    	<label>Username</label>
+    	<input type="text" name="username" id="field1">
+    	<label>Password</label>
+    	<input type="password" name="pass" id="field2">
+    	<div id="error401">You entered wrong login name or password</div>
+    	<div id="error403">You have something wrong in request</div>
+    	<input type="button" name="submit" value="Login" onclick="getData()">
+    </form>
+    <form id="formResetPass">
+      <label>Old password</label>
+      <input type="password" name="oldpass">
+      <label>New password</label>
+      <input type="password" name="newpass">
+      <input type="button" id="changepass" onclick="changePass()" value="Change Password">
+    </form>
+
+    <form id="formSendJoke">
+    	<label class="hdnLabel">Send joke!</label>
+    	<input class="hdnField" type="text" name="joke">
+      <input type="button" id="passReset" value="Reset password" onclick="toPass()">
+    </form>
+
+    </div>
+
+    <div id="boxJokes"></div>
+</div>
 
 <script type="text/javascript">
 

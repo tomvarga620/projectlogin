@@ -118,7 +118,6 @@ input[type="button"]{
 width:90px;
 height:50px;
 -webkit-appearance: none;
-border-radius: 0;
 border:none;
 outline:none;
 background: #FF4D56;
@@ -236,6 +235,8 @@ height:85%;
 margin:auto;
 background:#D6D6D3;
 display:none;
+overflow-y:auto; 
+overflow-x:hidden; 
 
 }
 
@@ -274,6 +275,46 @@ margin-left:8px;
 
 }
 
+.author {
+
+margin-top:20px;
+width:80px;
+height:40px;
+background:#B0B0AE;
+text-align:center;
+color:white;
+font-weight:bold;
+font-size:15px;
+line-height: 40px;
+
+}
+
+.message {
+
+width:100%;
+height:auto;
+background:#A3A3A1;
+color:white;
+font-size:25px;
+/*line-height: 130px;*/
+font-weight:bold;
+
+}
+
+#count {
+
+width:90px;
+height:50px;
+background:#B0B0AD;
+margin-left:8px;
+border-radius:7px;
+text-align:center;
+color:white;
+font-weight:bold;
+font-size:15px;
+line-height: 50px;
+
+}
 
 
 @media screen and (max-width: 768px) {
@@ -325,11 +366,6 @@ margin: -10px 0 0 -150px;
 
 }
 
-#message {
-
-
-}
-
 </style>
 
 <div id="boxWrapper">
@@ -370,11 +406,15 @@ margin: -10px 0 0 -150px;
 
     <div id="boxJokes"></div>
     <div id="messageWrapper">
-        <div id="mHalf1"><div class='message'></div></div>
+        <div id="mHalf1">
+      <!--<div class="author"></div>
+          <div class='message'></div>-->
+        </div>
         <div id="mHalf2">
           <input type="text" name="message">
           <input type="button" value="Send" id="sendM" onclick="sendMessage()">
           <input type="button" value="Get Messages" id="getM" onclick="getMessage()">
+          <div id="count"></div>
         </div>
     </div>
 </div>
@@ -594,7 +634,9 @@ xhr.onreadystatechange = function () {
       console.log(count);
       console.log(author);
       console.log(messages);
-      /* $( "#boxMessage" ).append( "<div class='joke'>"+joke+"</div>" );*/
+      document.getElementById("count").innerHTML = count;
+      $( "#mHalf1" ).append( "<div class='author'>"+author+"</div>" );
+      $( "#mHalf1" ).append( "<div class='message'>"+messages+"</div>" );
 
     }
 }

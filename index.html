@@ -52,13 +52,26 @@ background: #E3E2DF;
 
 #boxJokes {
 
-width:100%;
+width:50%;
 height:50%;
 overflow-y:auto; 
 overflow-x:hidden; 
 background: #F0EFEC;
+float:left;
 
 }
+
+#boxMessages {
+
+width:50%;
+height:50%;
+overflow-y:auto; 
+overflow-x:hidden; 
+background:red;
+float:right;
+position: relative;
+	
+}  
 
 #logoutBox {
 
@@ -230,10 +243,6 @@ height:20%;
 height:30%;
 }
 
-#boxJokes{
-
-
-}
 
 #logoutBox {
 
@@ -270,8 +279,13 @@ margin: -10px 0 0 -150px;
 
 }
 
+
+#message {
+
+position: absolute;
+    bottom: 0px;
+
 }
-  
 
 </style>
 
@@ -312,6 +326,9 @@ margin: -10px 0 0 -150px;
     </div>
 
     <div id="boxJokes"></div>
+    <div id="boxMessages">
+    	<input type="text" name="message" id="message" onclick="sendMessage()">
+    </div>
 </div>
 
 <script type="text/javascript">

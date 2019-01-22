@@ -27,6 +27,7 @@ height:100%;
 margin:0 auto;
 padding:0;
 
+
 }
 
 #boxUp {
@@ -61,15 +62,14 @@ float:left;
 
 }
 
-#boxMessages {
+#messageWrapper {
 
 width:50%;
 height:50%;
 overflow-y:auto; 
 overflow-x:hidden; 
-background:red;
+background:#F0EFEC;
 float:right;
-position: relative;
 	
 }  
 
@@ -229,6 +229,52 @@ margin: -40px 0 0 -150px;
 
 }
 
+#mHalf1 {
+
+width:100%;
+height:85%;
+margin:auto;
+background:#D6D6D3;
+display:none;
+
+}
+
+#mHalf2 {
+
+width:100%;
+height:15%;
+/*background: green;*/
+display: none;
+align-items: center;
+
+}
+
+input[name="message"]{
+
+margin:0;
+margin-left:8px;
+/*display:none;*/
+
+}
+
+#sendM {
+
+margin:0;
+margin-left:8px;
+/*display:none;*/
+
+}
+
+#getM {
+
+margin:0;
+width:120px;
+margin-left:8px;
+/*display:none;*/
+
+}
+
+
 
 @media screen and (max-width: 768px) {
 
@@ -279,11 +325,8 @@ margin: -10px 0 0 -150px;
 
 }
 
-
 #message {
 
-position: absolute;
-    bottom: 0px;
 
 }
 
@@ -326,8 +369,13 @@ position: absolute;
     </div>
 
     <div id="boxJokes"></div>
-    <div id="boxMessages">
-    	<input type="text" name="message" id="message" onclick="sendMessage()">
+    <div id="messageWrapper">
+        <div id="mHalf1"><div class='message'></div></div>
+        <div id="mHalf2">
+          <input type="text" name="message">
+          <input type="button" value="Send" id="sendM" onclick="sendMessage()">
+          <input type="button" value="Get Messages" id="getM" onclick="getMessage()">
+        </div>
     </div>
 </div>
 
@@ -370,6 +418,8 @@ xhr.onreadystatechange = function () {
         document.getElementById("formSendJoke").style.display="block";
         document.getElementById("error401").style.display="none";
         document.getElementById("error403").style.display="none";
+        document.getElementById("mHalf1").style.display="block";
+        document.getElementById("mHalf2").style.display="flex";
 
         /*clean fields in form*/
         document.getElementById("field1").value="";
@@ -468,6 +518,8 @@ function logout(){
         document.getElementById("logoutBox").style.display="none";
         document.getElementById("formSendJoke").style.display="none";
         document.getElementById("formResetPass").style.display="none";
+        document.getElementById("mHalf1").style.display="none";
+        document.getElementById("mHalf2").style.display="none";
        
         $( "#jokeSend" ).remove();
         $( "#jokeGet" ).remove();
@@ -515,6 +567,38 @@ xhr.onreadystatechange = function () {
     }
 }
 let data = JSON.stringify({login:enteredName,token:token,oldpassword:oldpass,newpassword:newpass});
+xhr.send(data);
+
+}
+
+function getMessage(){
+
+let token=sessionStorage.getItem('loginToken');
+let enteredName=sessionStorage.getItem('loginName');
+
+console.log(xhr.status);
+console.log(token);
+console.log(enteredName);
+
+xhr = new XMLHttpRequest();
+let url = "http://itsovy.sk:1201/getmessages";
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json");
+xhr.onreadystatechange = function () { 
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      let json= JSON.parse(xhr.responseText);
+        
+      let count = json.count;
+      let author = json.messages[0].from;
+      let messages = json.messages[0].message;
+      console.log(count);
+      console.log(author);
+      console.log(messages);
+      /* $( "#boxMessage" ).append( "<div class='joke'>"+joke+"</div>" );*/
+
+    }
+}
+let data = JSON.stringify({login:enteredName,token:token});
 xhr.send(data);
 
 }

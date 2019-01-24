@@ -258,6 +258,14 @@ margin-left:8px;
 
 }
 
+input[name="toWho"]{
+
+margin:0;
+margin-left:8px;
+width:50px;
+
+}
+
 #sendM {
 
 margin:0;
@@ -411,7 +419,7 @@ margin: -10px 0 0 -150px;
           <div class='message'></div>-->
         </div>
         <div id="mHalf2">
-          <input type="text" name="message">
+          <input type="text" name="message" placeholder="Enter your message"><input type="text" name="toWho" placeholder="Person..">
           <input type="button" value="Send" id="sendM" onclick="sendMessage()">
           <input type="button" value="Get Messages" id="getM" onclick="getMessage()">
           <div id="count"></div>
@@ -627,16 +635,20 @@ xhr.setRequestHeader("Content-type", "application/json");
 xhr.onreadystatechange = function () { 
     if (xhr.readyState == 4 && xhr.status == 200) {
       let json= JSON.parse(xhr.responseText);
-        
+      $( ".author" ).remove();
+      $( ".message" ).remove();
+
+      for(let i=0;i<json.messages.length;i++){
       let count = json.count;
-      let author = json.messages[0].from;
-      let messages = json.messages[0].message;
+      let author = json.messages[i].from;
+      let messages = json.messages[i].message;
       console.log(count);
       console.log(author);
       console.log(messages);
       document.getElementById("count").innerHTML = count;
       $( "#mHalf1" ).append( "<div class='author'>"+author+"</div>" );
       $( "#mHalf1" ).append( "<div class='message'>"+messages+"</div>" );
+      }
 
     }
 }
@@ -644,6 +656,36 @@ let data = JSON.stringify({login:enteredName,token:token});
 xhr.send(data);
 
 }
+
+/*
+function sendMessage(){
+
+
+let token=sessionStorage.getItem('loginToken');
+let enteredName=sessionStorage.getItem('loginName');
+let toUser=;
+let toMessage=;
+
+console.log(toUser);
+console.log(toMessage);
+console.log(xhr.status);
+console.log(token);
+console.log(enteredName);
+
+xhr = new XMLHttpRequest();
+let url = "http://itsovy.sk:1201/sendmessage";
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json");
+xhr.onreadystatechange = function () { 
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      //let json= JSON.parse(xhr.responseText);
+
+    }
+}
+let data = JSON.stringify({login:enteredName,token:token,user:toUser,message:toMessage});
+xhr.send(data);
+
+}*/
 
 </script>
 

@@ -325,6 +325,16 @@ line-height: 50px;
 }
 
 
+#passBox,#oldpassBox {
+
+color:#401315;
+font-size:16px;
+font-weight:bold;
+text-align:center;
+
+}
+
+
 @media screen and (max-width: 768px) {
 
 #boxUp{
@@ -374,6 +384,7 @@ margin: -10px 0 0 -150px;
 
 }
 
+
 </style>
 
 <div id="boxWrapper">
@@ -399,8 +410,10 @@ margin: -10px 0 0 -150px;
     <form id="formResetPass">
       <label>Old password</label>
       <input type="password" name="oldpass">
+      <div id="oldpassBox"></div>
       <label>New password</label>
-      <input type="password" name="newpass">
+      <input type="password" name="newpass" id="passField">
+      <div id="passBox"></div>
       <input type="button" id="changepass" onclick="changePass()" value="Change Password">
     </form>
 
@@ -588,7 +601,41 @@ document.getElementById("formResetPass").style.display="block";
 
 }
 
+function verifyPass(){
+
+let pass = document.getElementById("passField").value;
+console.log(pass);
+
+        if(pass.length<8){
+        document.getElementById("passBox").innerHTML="Minimum 8 characters (plus 1 number ,1 upper and 1 lower letter)";
+        }
+        else
+        {
+          if( ( /[A-Z]/.test(pass) )===true){
+            if( (/[a-z]/.test(pass) )===true){
+              if( (/[\d]/.test(pass) )===true){
+                document.getElementById("passBox").innerHTML="";
+              }
+              else
+              {
+                document.getElementById("passBox").innerHTML="Password must have minimum 1 number";
+              }
+            }
+            else
+            {
+            document.getElementById("passBox").innerHTML="Password must have minimum 1 lower letter";
+            }
+          }
+          else
+          {
+            document.getElementById("passBox").innerHTML="Password must have minimum 1 upper letter";
+          }
+        }
+}
+
 function changePass(){
+
+verifyPass();
 
 let token=sessionStorage.getItem('loginToken');
 let enteredName=sessionStorage.getItem('loginName');
@@ -611,7 +658,12 @@ xhr.onreadystatechange = function () {
 
         document.getElementById("formResetPass").style.display="none";
         document.getElementById("formSendJoke").style.display="block";
+        document.getElementById("oldpassBox").innerHTML="";
 
+    }
+
+    if(xhr.status == 401){
+       document.getElementById("oldpassBox").innerHTML="You must enter old and new password";
     }
 }
 let data = JSON.stringify({login:enteredName,token:token,oldpassword:oldpass,newpassword:newpass});
@@ -656,6 +708,7 @@ let data = JSON.stringify({login:enteredName,token:token});
 xhr.send(data);
 
 }
+
 
 /*
 function sendMessage(){

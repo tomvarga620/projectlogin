@@ -464,7 +464,6 @@ xhr.onreadystatechange = function () {
         /*session*/
         sessionStorage.setItem('loginName', json.login);
         sessionStorage.setItem('loginToken', json.token);
-        sessionStorage.setItem('loginPass', pass);
        	/*variable for session*/
        	let token=sessionStorage.getItem('loginToken');
         let enteredName=sessionStorage.getItem('loginName');
@@ -637,18 +636,12 @@ let enteredName=sessionStorage.getItem('loginName');
 
 let oldpass = document.getElementsByName("oldpass")[0].value;
 let newpass = document.getElementsByName("newpass")[0].value;
-let loginPass= sessionStorage.getItem('loginPass');
 
 console.log(oldpass+newpass);
 console.log(xhr.status);
 console.log(token);
 console.log(enteredName);
 
-  if(oldpass !== loginPass){
-
-    ocument.getElementById("oldpassBox").innerHTML="Wrong old password";
-
-  }
 
 xhr = new XMLHttpRequest();
 let url = "http://itsovy.sk:1201/changepassword";
@@ -662,6 +655,10 @@ xhr.onreadystatechange = function () {
         document.getElementById("formSendJoke").style.display="block";
         document.getElementById("oldpassBox").innerHTML="";
 
+    }
+
+    if(xhr.status == 401){
+        document.getElementById("oldpassBox").innerHTML="Wrong old password";
     }
 }
 let data = JSON.stringify({login:enteredName,token:token,oldpassword:oldpass,newpassword:newpass});

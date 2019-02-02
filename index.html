@@ -286,9 +286,24 @@ margin-left:8px;
 .author {
 
 margin-top:20px;
-width:80px;
+width:250px;
 height:40px;
 background:#B0B0AE;
+text-align:center;
+color:white;
+font-weight:bold;
+font-size:15px;
+line-height: 40px;
+
+
+}
+
+.date {
+
+margin-top:20px;
+width:300px;
+height:40px;
+background:#BDBDBB;
 text-align:center;
 color:white;
 font-weight:bold;
@@ -425,7 +440,8 @@ margin: -10px 0 0 -150px;
     <div id="messageWrapper">
         <div id="mHalf1">
       <!--<div class="author"></div>
-          <div class='message'></div>-->
+          <div class='message'></div>
+          <div class='date'></div>-->
         </div>
         <div id="mHalf2">
           <input type="text" name="message" placeholder="Enter your message" id="toMessage"><input type="text" name="toWho" placeholder="Person.." id="toUser">
@@ -688,12 +704,15 @@ xhr.onreadystatechange = function () {
       for(let i=0;i<json.messages.length;i++){
       let count = json.count;
       let author = json.messages[i].from;
+      let mDate = json.messages[i].date;
       let messages = json.messages[i].message;
       console.log(count);
       console.log(author);
       console.log(messages);
+      console.log(mDate);
       document.getElementById("count").innerHTML = count;
-      $( "#mHalf1" ).append( "<div class='author'>"+author+"</div>" );
+      $( "#mHalf1" ).append( "<div class='author'>"+author+"  "+mDate+"</div>" );
+      //$( "#mHalf1" ).append( "<div class='date'>"+mDate+"</div>" );
       $( "#mHalf1" ).append( "<div class='message'>"+messages+"</div>" );
       }
 
@@ -732,6 +751,7 @@ let data = JSON.stringify({login:enteredName,token:token,user:enteredUser,messag
 xhr.send(data);
 
 }
+
 
 </script>
 
